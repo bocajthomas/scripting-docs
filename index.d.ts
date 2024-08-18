@@ -29,6 +29,9 @@ interface JSConsole {
 
 declare const console: JSConsole;
 
+// Get the current execution side at runtime
+// - core: Snapchat side
+// - manager: SnapEnhance side
 declare const currentSide: "core" | "manager";
 
 declare namespace module {
@@ -43,17 +46,31 @@ declare namespace module {
         readonly grantedPermissions: string[];
     }
 
+    /*
+    Allow the module to export functions/variables to be used by other modules like in Node.js (can be accessed using require('@modules/moduleName').variableName)
+    */
     let exports: any | undefined;
 
     const info: ModuleInfo;
 
-    // SnapEnhance side
+    // -- SnapEnhance side --
+
+    // Called when the SnapEnhance app is started in the background/foreground
     let onSnapEnhanceLoad: ((context: any) => void) | undefined;
 
-    // Snapchat side
+
+    // -- Snapchat side -- 
+
+    // Called when the Snapchat app is started in the background/foreground
     let onSnapApplicationLoad: ((context: any) => void) | undefined;
+
+    // Called once when the main activity is created
     let onSnapMainActivityCreate: ((activity: any) => void) | undefined;
 
+    // Called when the bridge connection between SnapEnhance and Snapchat is connected or reconnected
+    let onBridgeConnected: ((isReloaded: bool) => void) | undefined;
+
+    // Called when the module is unloaded by the user
     let onUnload: (() => void) | undefined;
 }
 
@@ -63,11 +80,13 @@ declare function logError(message: any, throwable?: any);
 declare function shortToast(...messages: string[]);
 declare function longToast(...messages: string[]);
 
+// the useModClassLoader parameter requires the "unsafe-classloader" permission when set to true
 declare function type(className: string, useModClassLoader?: boolean): JavaType | undefined;
 declare function findClass(className: string, useModClassLoader?: boolean): Class<any> | undefined;
 declare function setField(instance: any, fieldName: string, value: any | undefined): void;
 declare function getField(instance: any, fieldName: string): any | undefined;
 
+// This function makes the current thread sleep for the specified duration in milliseconds
 declare function sleep(durationMs: number);
 
 declare module "hooker" {
@@ -220,13 +239,17 @@ declare module "interface-manager" {
 declare module "ipc" {
     type Listener = (args: any[]) => void;
 
+    /* Note: listeners are automatically re-registered after a bridge reload */
     function on(channel: string, listener: Listener): void;
-    function onBroadcast(channel: string, listener: Listener): void;
+    function onBroadcast(channel: string, eventName: string, listener: Listener): void;
 
-    function emit(eventName: string): void;
-    function emit(eventName: string, ...args: any[]): void;
-    function broadcast(channel: string, eventName: string): void;
-    function broadcast(channel: string, eventName: string, ...args: any[]): void;
+    /* all those functions return the number of listeners that are called */
+    function emit(eventName: string): number;
+    function emit(eventName: string, ...args: any[]): number;
+    function broadcast(channel: string, eventName: string): number;
+    function broadcast(channel: string, eventName: string, ...args: any[]): number;
+
+    function isBridgeAlive(): boolean;
 }
 
 declare module "java-interfaces" {
