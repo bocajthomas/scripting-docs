@@ -311,6 +311,7 @@ declare module "messaging" {
 
     type MessageUpdate =  "read" | "release" | "save" | "unsave" | "erase" | "screenshot" | "screen_record" | "replay" | "reaction" | "remove_reaction" | "revoke_transcription" | "allow_transcription" | "erase_saved_story_media";
 
+    function onConversationManagerReady(callback: () => void): void;
 
     function isPresent(): boolean;
     function newSnapUUID(uuid: string): SnapUUID;
