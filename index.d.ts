@@ -68,7 +68,7 @@ declare namespace module {
     let onSnapMainActivityCreate: ((activity: any) => void) | undefined;
 
     // Called when the bridge connection between SnapEnhance and Snapchat is connected or reconnected
-    let onBridgeConnected: ((isReloaded: bool) => void) | undefined;
+    let onBridgeConnected: ((isReloaded: boolean) => void) | undefined;
 
     // Called when the module is unloaded by the user
     let onUnload: (() => void) | undefined;
@@ -297,12 +297,12 @@ declare module "messaging" {
         messageDescriptor: MessageDescriptor;
         messageState: any
 
-        serialize(): string?;
+        serialize(): string | undefined;
     }
 
-    type ResultCallback = (error?: any) => void;
-    type MessageResultCallback = (error?: any, message?: Message) => void;
-    type MessageListResultCallback = (error?: any, messages: Message[]) => void;
+    type ResultCallback = (error: any | undefined) => void;
+    type MessageResultCallback = (error: any | undefined, message?: Message) => void;
+    type MessageListResultCallback = (error: any | undefined, messages: Message[]) => void;
 
     interface ConversationUserIdPair {
         readonly conversationId: string;
@@ -417,7 +417,7 @@ declare module "events" {
     }
 
     interface SendMessageWithContentEvent extends Event {
-        readonly destinations: MessageDestinations;
+        readonly destinations: any;
         readonly messageContent: MessageContent;
     }
 
