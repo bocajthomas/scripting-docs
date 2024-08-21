@@ -255,6 +255,7 @@ declare module "ipc" {
 declare module "java-interfaces" {
     function runnable(callback: (() => void)): any;
     function newProxy(javaClass: Class<any>, callback: ((proxy: any, method: any, args: any[]) => any)): any;
+    function thread(callback: (() => void)): any;
 }
 
 declare module "messaging" {
