@@ -29,7 +29,7 @@ module.onSnapMainActivityCreate = function(activity) {
     const webViewConstructor = WebViewClass.getConstructor(ContextClass);
     const webView = webViewConstructor.newInstance(activity);
     webView.getSettings().setJavaScriptEnabled(true);
-    webView.loadUrl("https://youtu.be/xvFZjo5PgG0");
+    webView.loadUrl("https://github.com/SnapEnhance/scripting-docs");
 
     const builderConstructor = AlertDialogBuilderClass.getConstructor(ContextClass);
     const builder = builderConstructor.newInstance(activity);
